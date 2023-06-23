@@ -56,11 +56,9 @@ public class CreateAccountFlowTest {
             
             //getting task which is created using flow related to account
             Task createdTask = [SELECT id, whatId, description, status FROM Task WHERE whatId = :newAccountId];
-            System.debug(createdTask.Status);
             
             //editing task record
             if(Schema.sObjectType.Task.isUpdateable()){
-                System.debug('debug inside if' + createdTask.Status);
           		createdTask.Status = 'Completed';
           		createdTask.Description = 'task details';
                 update createdTask;
@@ -81,9 +79,7 @@ public class CreateAccountFlowTest {
             Account insertedAccount =[SELECT id,Active__c,Description FROM Account WHERE Id = :newAccountId];
             //getting task which is created using flow related to account
             Task createdTask = [SELECT id, whatId, description, status FROM Task WHERE whatId = :newAccountId];
-            System.debug(createdTask.Status);
             if(Schema.sObjectType.Task.isUpdateable()){
-                System.debug('debug inside if' + createdTask.Status);
           		createdTask.Status = 'Completed';
           		createdTask.Description = 'task details';
                 update createdTask;
