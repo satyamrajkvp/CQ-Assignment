@@ -3,15 +3,15 @@
  * @author            : Satyam Raj
  * @group             : KVP Business Solutions
  * @last modified on  : 06-23-2023
- * @last modified by  : satyam.r@kvpcorp.com
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 **/
 @isTest
 public class CreateAccountFlowTest {
     
-    @isTest
-    static void testFlows(){
-     
-        //creating user with access to close the task
+    //test setup method to create two user, one with System admin profile and other with custom standard user profile.
+    @testSetup 
+    static void setup() {
+     //creating user with access to close the task
       Id systemAdminProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator' LIMIT 1].Id;
 	  User userWithAccess = new User();
       userWithAccess.Username = 'user456@kvpcorp.com';
@@ -40,17 +40,24 @@ public class CreateAccountFlowTest {
        userWithoutAccess.ProfileId = standardUserProfileId;
        userWithoutAccess.LanguageLocaleKey = 'en_US';
 	   insert userWithoutAccess;
-      //assigning permission set to user
+		
+}
+    
+    @isTest
+    static void testFlows(){
+     //getting user with and without permission.
+      User userWithAccess = [SELECT id,Name FROM User WHERE Username = 'user456@kvpcorp.com'];
+      User userWithoutAccess =   [SELECT id,Name FROM User WHERE Username = 'user45642@kvpcorp.com']; 
       test.startTest();
         
         //Running the task closure code with user who have access
         System.runAs(userWithAccess){
             //creating account to trigger the flow and create task
             Account newAccount = new Account();
-     	 	newAccount.name = 'Demo Account test';
-     	 	newAccount.AccountNumber = '3400';
-     	 	newAccount.Active__c = true;
-     	 	insert newAccount;
+     	 	    newAccount.name = 'Demo Account test';
+     	 	    newAccount.AccountNumber = '3400';
+     	 	    newAccount.Active__c = true;
+     	 	    insert newAccount;
             Id newAccountId = newAccount.Id;
             Account insertedAccount =[SELECT id,Active__c,Description FROM Account WHERE Id = :newAccountId];
             
@@ -71,10 +78,10 @@ public class CreateAccountFlowTest {
         System.runAs(userWithoutAccess){
             //creating account to trigger the flow and create task
             Account newAccount = new Account();
-     	 	newAccount.name = 'Demo Account test';
-     	 	newAccount.AccountNumber = '3400';
-     	 	newAccount.Active__c = true;
-     	 	insert newAccount;
+     	 	    newAccount.name = 'Demo Account test';
+     	 	    newAccount.AccountNumber = '3400';
+     	 	    newAccount.Active__c = true;
+     	 	    insert newAccount;
             Id newAccountId = newAccount.Id;
             Account insertedAccount =[SELECT id,Active__c,Description FROM Account WHERE Id = :newAccountId];
             //getting task which is created using flow related to account
