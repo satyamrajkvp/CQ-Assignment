@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>58.0</apiVersion>
+    <decisions>
+        <name>Is_Account_Null</name>
+        <label>Is Account Null</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Is Null</defaultConnectorLabel>
+        <rules>
+            <name>Not_Null</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Related_Account</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Related_Account_as_Active</targetReference>
+            </connector>
+            <label>Not Null</label>
+        </rules>
+    </decisions>
     <environments>Default</environments>
     <interviewLabel>TaskCompleteFlow {!$Flow.CurrentDateTime}</interviewLabel>
     <label>TaskCompleteFlow</label>
@@ -26,11 +48,11 @@
     <recordLookups>
         <name>Get_Related_Account</name>
         <label>Get Related Account</label>
-        <locationX>176</locationX>
+        <locationX>182</locationX>
         <locationY>323</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Update_Related_Account</targetReference>
+            <targetReference>Is_Account_Null</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -45,10 +67,10 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
-        <name>Update_Related_Account</name>
-        <label>Update Related Account</label>
-        <locationX>176</locationX>
-        <locationY>431</locationY>
+        <name>Update_Related_Account_as_Active</name>
+        <label>Update Related Account as Active</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -72,7 +94,7 @@
         <object>Account</object>
     </recordUpdates>
     <start>
-        <locationX>50</locationX>
+        <locationX>56</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_Related_Account</targetReference>
@@ -89,5 +111,5 @@
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Active</status>
+    <status>Draft</status>
 </Flow>
